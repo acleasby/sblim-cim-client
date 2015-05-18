@@ -1,0 +1,24 @@
+# ignore maven generated target directory.
+dist/
+target/
+.idea/
+bin/
+*.iml
+*atlassian-ide-plugin.xml
+*~
+*.DS_Store
+*.settings
+*.project
+*.buildpath
+*.classpath
+*.class
+*.jar
+*.war
+*.ear
+*.db
+*.pmd
+*.pyc
+*.log
+.pydevproject
+
+.vagrant

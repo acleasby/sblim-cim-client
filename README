@@ -1,0 +1,103 @@
+SBLIM Java CIM Client
+=====================
+
+(C) Copyright IBM Corp. 2005, 2009
+
+ THIS FILE IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC LICENSE 
+ ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THIS FILE 
+ CONSTITUTES RECIPIENTS ACCEPTANCE OF THE AGREEMENT.
+ 
+ You can obtain a current copy of the Eclipse Public License from
+ http://www.opensource.org/licenses/eclipse-1.0.php
+
+Author:             Viktor Mihajlovski <mihajlov@de.ibm.com>
+Contributors:
+                    Thorsten Schaefer  <thschaef@de.ibm.com>
+                    Wolfgang Taphorn   <taphorn@de.ibm.com>
+
+Last Change Date: 06/22/2009
+
+
+About this Package
+------------------
+The purpose of this package is to provide a CIM Client Class Library
+for Java applications. It complies to the DMTF standard CIM Operations over
+HTTP and intends to be compatible with JCP JSR48 once it becomes available.
+To learn more about DMTF visit http://www.dmtf.org.
+More infos about the Java Community Process and JSR48 can be found at
+http://www.jcp.org and http://www.jcp.org/en/jsr/detail?id=48.
+
+
+Requirements
+------------
+In order to build, install and operate this package you will need a 
+Java SDK or Run Time Environment of version 1.4 or higher, depending on
+whether you build binaries from sources or use the pre-built binaries (JAR
+file).
+
+Sun Java SDK/JRE:
+For users of the Sun Java packages, the following package is required to be 
+adapted into the CLASSPATH environment variable:
+ - xerces    http://xml.apache.org/xerces2-j
+
+IBM Java SDK/JRE:
+Because the IBM Java packages includes already the xerces package, no further
+requirements need to be resolved.
+
+As a requirement for building the SBLIM CIM Client, Apache Ant 
+(http://ant.apache.org) needs to be setup properly. We would like to recommend
+a Apache Ant version 1.6.5 or higher. (Lower versions might also work properly
+here)
+
+
+Building and Installing the CIM Client
+--------------------------------------
+The build process is based on Apache Ant, so it is very easy to build the 
+SBLIM CIM Client.
+
+Running Sun Java SDK:
+If you have a xerces parser included into your systems CLASSPATH environment 
+variable, no further dependencies need to be resolved.
+If you don't have a xerces parser included, please create a directory named 
+'lib' in the 'basedir' directory of the SBLIM CIM Client. Please copy the 
+'xerces' Java Archives (JAR files) into this 'lib' directory.
+
+An Ant build.xml file is in place which supports the following targets:
+  
+  help          : This target can be used to display a description of the several 
+                  targets.
+  clean         : This target can be used to clean up the project from previous
+                  builds.
+  build         : This target can be used to build the Java classes of the SBLIM
+                  CIM Client project.
+  build-release : This target can be used to build the Java classes of the SBLIM
+                  CIM Client project and also the JavaDoc.
+  java-doc      : This target can be used to compose the JavaDoc for all SBLIM
+                  CIM Client classes.
+  package       : This target can be used to build a Java Archive (JAR file) 
+                  which includes a Manifest and all Java classes of the SBLIM CIM
+                  Client.
+  release       : This target can be used to build zip archives and tar balls 
+                  containing source, binary and documentation of the SBLIM CIM 
+                  Client.
+  cvs-update    : This target can be used to update the current SBLIM CIM Client
+                  to the latest version from CVS.
+
+The execution of the build process is very easy. Once, Apache Ant is setup 
+properly on your system, just execute 'ant <target>' in the 'basedir' directory
+of the SBLIM CIM Client. The output will be written into a new created
+directory named 'cim-client'. That's all.
+
+
+Using the SBLIM CIM Client
+--------------------------
+The SBLIM CIM Client is a Java implementation that can be used in all 
+applications which deal with CIMOMs.
+It is packaged into a Java Archive (JAR file) that can be consumed by other
+Java applications as needed.
+
+sblimCIMClient.jar:	This jar contains the core client with the SBLIM API
+
+Additionally, the SBLIM CIM Client is also packaged as RPM package which can be
+used in Linux Distributions to be installed. The RPM is based on the 
+infrastructure that is defined by the JPackage project.

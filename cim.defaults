@@ -1,0 +1,196 @@
+###############################################################################
+# SBLIM CIM Client configuration properties.
+#
+# This file is used to specify the properties for the SBLIM CIM Client. 
+# Properties included in this file can be used to change the behaviour of the
+# SBLIM CIM Client.
+# By default, all of the properties are comments and additionally set to their
+# default values. To change a property, just remove the leading '#' and set 
+# the value to the value of your choice.
+###############################################################################
+
+# Specifies the time out for the connection (in milliseconds). A timeout of 
+# zero is interpreted as an infinite timeout.
+# Defining a value outside the value range will cause to use the default value.
+# Type: Integer
+# Range: 0 .. 2147483647
+# Default: 0
+#http.timeout = 0;
+
+# Specifies the maximum number of connections to keep alive for the connection 
+# pool. A positive value defines the number of connection, zero - no connection
+# will be reused, and -1 all connections will be reused (when it's possible).
+# Defining a value outside the value range will cause to use the default value.
+# Type: Integer
+# Range: -1 .. 2147483647
+# Default: 16
+#http.pool.size = 16
+
+# Specifies the JSSE provider.
+# Type: String
+# Default: The installed provider for 'SSLContext.SSL' with the highest priority or
+# 'com.ibm.jsse.IBMJSSEProvider' if none is reported by the JVM
+#https.jsse.provider = com.ibm.jsse.IBMJSSEProvider
+
+# Specifies the JSSE certificate manager.
+# Type: String
+# Default: The value of the security property 'ssl.KeyManagerFactory.algorithm' or
+# 'IbmX509' if the property is null
+#https.jsse.certificate = IbmX509
+
+# The protocol used for SSLContext.getInstance(String protocol). For IBMJSSE2 provider it can
+# be "SSL_TLS".
+# Type: String
+# Default: "SSL"
+#
+#https.protocol = SSL
+
+
+# Specifies the path of the truststore.
+# Type: String
+# Default: 'truststore'
+#https.truststore.path = truststore
+
+# Specifies the password for the truststore. (plain password)
+# Type: String
+# Default: - null value -
+#https.truststore.password 
+
+# Specifies the path of the keystore
+# Type: String
+# Default: 'keystore'
+#https.keystore.path = keystore
+
+# Specifies the password for the keystore. (plain password)
+# Type: String
+# Default: - null value -
+#https.keystore.password
+
+# Specifies the type of the keystore
+# Type: String
+# Default: 'JKS'
+#https.keystore.type = JKS
+
+# Specifies the parsing model to be used. 0 - pullbase, 1 - SAX, 2 - DOM
+# Type: Integer
+# Defining a value outside the value range will cause to use the default value.
+# Range: 0 .. 2
+# Default: 0
+#xml.parser = 0
+
+# Turn the logger on/off. true - turn the logger on, false - turn the logger off.
+# Using a 
+# Defining a value outside the value range will cause to use the default value.
+# Type: Boolean
+# Range: false, true
+# Default: false
+#logger = false
+
+# The namespace used for the logger. Specify a different namespace than the
+# default one to create your own logging environment. Be sure, that no one else
+# is using the specified namespace, if you want to modify the logger.
+# Type: String
+# Default: 'org.sblim.wbem.cim'
+#logger.namespace = org.sblim.wbem.cim
+
+# Specifies the level of the messages to be display in the console.
+# Defining a value outside the value range will cause to use the default value.
+# Type: String
+# Range: OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, All
+# Default: WARNING
+#log.console.level = WARNING
+
+# Specifies the level of the messages to be keep in the log file.
+# Defining a value outside the value range will cause to use the default value.
+# Type: String
+# Range: OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, All
+# Default: WARNING
+#log.file.level = WARNING
+
+# Specifies the output log file.
+# Type: String
+# Default: 'cimclient.log'
+#log.output = cimclient.log
+
+# Debug the raw inputstream from the response, before the XML is parsed.
+# Defining a value outside the value range will cause to use the default value.
+# Type: Boolean
+# Range: false, true
+# Default: false
+#debug.istream = false
+
+# Specifies the output stream for the debugging information. "stdout" is used
+# for the systems standard output, "stderr" is used for the systems standard 
+# error. Otherwise the path of the output file.
+# Type: String
+# Default: 'stdout'
+#debug.istream.output = stdout
+
+# Debug the XML from the response.
+# Defining a value outside the value range will cause to use the default value.
+# Type: Boolean
+# Range: false, true
+# Default: false
+#debug.xml.input = false
+
+# Debug the XML from the request.
+# Defining a value outside the value range will cause to use the default value.
+# Type: Boolean
+# Range: false, true
+# Default: false
+#debug.xml.output = false
+
+# Turn on/off debugging info for the HTTP connection pool.
+# Defining a value outside the value range will cause to use the default value.
+# Type: Boolean
+# Range: false, true
+# Default: false
+# !!! DEPRECATED !!! not used in the current implementation.
+#debug.http.pool = false
+
+# Turn on/off the usage of the default user/pw. This can be used if the 
+# CIMOM requires a "garbage" credential.
+# Defining a value outside the value range will cause to use the default value.
+# Type: Boolean
+# Range: false, true
+# Default: false
+#default.authorization.enabled = false
+
+# The name of the user for the "garbage" credential.
+# Type: String
+# Default: 'default'
+#default.principal = default
+
+# The credential of the user for the "garbage" credential.
+# Type: String
+# Default: 'default'
+#default.credential = default
+
+# This defines the number of retries that are executed in case an error occurs.
+# during the transmission of the cimXML request.
+# Type: Integer
+# Range: 0 .. 5 (max allowed)
+# Default: 1
+#retries.number = 2
+
+# Enables the retry mechanism in case the content length of the response is below.
+# Type: Boolean
+# Range: false, true
+# Default: true
+#retries.content.enable = true
+
+# The minimal content length of a response
+# Type: Integer
+# Range: 0 .. 2147483647
+# Default: 50
+#retries.content.lenght = 50
+ 
+# If set to false, SSL handshakes are not synchronized.  If set to true, SSL handshakes
+# are synchronized as a workaround for an IBM JSSE problem with thread-safe handshakes.
+# Type: Boolean
+# Range: false, true
+# Default: true
+#synchronized.ssl.handshake = true
+
+
+

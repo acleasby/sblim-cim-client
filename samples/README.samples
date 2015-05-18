@@ -1,0 +1,32 @@
+SBLIM Java CIM Client Samples
+=============================
+
+(C) Copyright IBM Corp. 2005, 2009
+
+ THIS FILE IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC LICENSE 
+ ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THIS FILE 
+ CONSTITUTES RECIPIENTS ACCEPTANCE OF THE AGREEMENT.
+ 
+ You can obtain a current copy of the Eclipse Public License from
+ http://www.opensource.org/licenses/eclipse-1.0.php
+
+Author:             Wolfgang Taphorn   <taphorn@de.ibm.com>
+					Kai Boerner   <kboerner@de.ibm.com>
+Contributors:
+                    
+
+                    
+IndicationSubscriptionListenerSample.java
+-----------------------------------------
+
+This sample file contains the whole process to subscribe, listen and 
+catch cim indications. This sample starts a http server, which listens
+for cim indications. All cim indications are catched in "indicationOccured()".
+To configure the cimom to send out indications to this http server, this sample
+creates one listener destination instance and four filter instances. These
+instances tell the cimom where our http server can be reached and what
+kind of indications we want to get. At least the sample creates an association
+instance between each created filter and our created handler instance to
+activate such filter/destination combination in cimom. Whenever cimom 
+changes and these changes ar part of the defined filters, it will send
+a cim indication to our http server.

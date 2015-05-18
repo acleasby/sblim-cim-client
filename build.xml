@@ -1,0 +1,328 @@
+<!--
+  build.xml
+ 
+  (C) Copyright IBM Corp. 2005, 2011
+ 
+  THIS FILE IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC LICENSE 
+  ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THIS FILE 
+  CONSTITUTES RECIPIENTS ACCEPTANCE OF THE AGREEMENT.
+ 
+  You can obtain a current copy of the Eclipse Public License from
+  http://www.opensource.org/licenses/eclipse-1.0.php
+ 
+  Author:           Thorsten Schaefer, IBM, thschaef@de.ibm.com  
+  
+  Contributors:     Wolfgang Taphorn, IBM, taphorn@de.ibm.com
+  					Alexander Wolf-Reber, IBM, a.wolf-reber@de.ibm.com
+
+ -->
+
+
+<project name="SBLIM CIM Client" default="release" basedir=".">
+
+    <description>
+        This is the Apache Ant build file of the SBLIM CIM Client.
+        The targets of this file can be used to build the SBLIM CIM Client. The 
+        output from the build process can then be packaged into a Java Archive 
+        (JAR file). Also a target to compose JavaDoc is available.
+        Additional to that, binary, source and documentation release archives 
+        (Zip and/or Tar) can be created.
+    </description>
+
+    <!-- set global properties for this build -->
+    <property environment="env" />
+
+    <property name="Base.copyright" value="(C) Copyright IBM Corp. 2005, 2011" />
+    <property name="Manifest.name" value="SBLIM CIM Client" />
+    <property name="Manifest.title" value="SBLIM CIM Client" />
+    <property name="Manifest.vendor" value="IBM Corporation 2005, 2011" />
+    <property name="Manifest.version" value="1.3.9.3" />
+
+    <property name="packagedir" value="cim-client" />
+    <property name="builddir" value="${basedir}/${packagedir}" />
+
+    <property name="jarfilename" value="sblimCIMClient.jar" />
+	<property name="slpjarfilename" value="sblimSLPClient.jar" />
+
+	<path id="project.classpath">
+        <fileset id="jar" dir="${basedir}/lib" >
+            <include name="**/*.jar" />
+        </fileset>
+    	
+    	<pathelement path="${java.class.path}/"/>
+    </path>
+
+
+    <target name="help" description="Display message eplaining the functionality 
+                                     of each target.">
+
+        <echo message="SBLIM CIM Client - build.xml" />
+        <echo message="============================" />
+        <echo />
+        <echo message="  ant clean         - Cleans up the directory structure" />
+        <echo />
+        <echo message="  ant build         - Builds the Java Sources of the SBLIM CIM Client" />
+        <echo />
+        <echo message="  ant package       - Builds the SBLIM CIM Client JAR file named sblimCIMClient.jar" />
+        <echo />
+        <echo message="  ant java-doc      - Composes the JavaDoc for the SBLIM CIM Client" />
+        <echo />
+        <echo message="  ant build-release - Builds the JavaDoc and the Package to be ready to include into a release" />
+        <echo />
+        <echo message="  ant release       - Builds Source, Binary and Documentation release TAR balls and Zip archives" />
+        <echo />
+        <echo message="  ant cvs-update    - Performs a 'cvs update -AdP' on the project"/>
+        <echo />
+        <echo message="  ant help          - Displays this message" />
+    </target>
+
+
+    <target name="clean" description="Deletes all components created during build">
+        <delete dir="${builddir}" />
+        <delete file="**/${jarfilename}" />
+    </target>
+
+
+    <target name="build" depends="clean" description="Builds the SBLIM CIM Client">
+        <mkdir dir="${builddir}/build"/>
+    	<mkdir dir="${basedir}/lib"/>
+
+        <javac srcdir="${basedir}" destdir="${builddir}/build" listfiles="true" debug="on" encoding="utf-8" source="1.4" target="1.4">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <target name="package" depends="build" description="Packages the SBLIM CIM Client into a JAR file">
+        <tstamp>
+          <format property="current.day" pattern="MM/dd/yyy" />
+          <format property="current.time" pattern="hh:mm:ss aa"/>
+        </tstamp>
+    	
+        <echo file="${builddir}/version.txt" append="false" message="PRODUCTNAME=${Manifest.name} ${line.separator}" />
+        <echo file="${builddir}/version.txt" append="true" message="COPYRIGHT=${Base.copyright}  ${line.separator}" />
+        <echo file="${builddir}/version.txt" append="true" message="VERSION= ${Manifest.version} ${TODAY} ${line.separator}" />
+        <echo file="${builddir}/version.txt" append="true" message="BUILDDATE=${current.day}  ${line.separator}" />
+        <echo file="${builddir}/version.txt" append="true" message="TIME=${current.time}  ${line.separator}" />
+
+    	<copy todir="${builddir}/build/org/sblim/wbem/cim/" file="${builddir}/version.txt" />
+    	
+        <jar index="true" 
+             destfile="${builddir}/${jarfilename}" 
+             basedir="${builddir}/build/" 
+             includes="**/*.class, **/version.txt"
+             excludes="**/sblim/slp/**, **/cimclient/sample/**">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}" />
+                    <section name="${Manifest.name}">
+                        <attribute name="Implementation-Title" value="${Manifest.title}" />
+                        <attribute name="Implementation-Version" value="${Manifest.version} ${TODAY}" />
+                        <attribute name="Implementation-Vendor" value="${Manifest.vendor}" />
+                        <attribute name="Sealed" value="false" />
+                    </section>
+             </manifest>
+        </jar>
+
+        <jar index="true" 
+             destfile="${builddir}/${slpjarfilename}" 
+             basedir="${builddir}/build/" 
+             includes="**/*.class, **/version.txt"
+             excludes="**/sblim/wbem/**, **/example/**">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}" />
+                    <section name="${Manifest.name}">
+                        <attribute name="Implementation-Title" value="${Manifest.title}" />
+                        <attribute name="Implementation-Version" value="${Manifest.version} ${TODAY}" />
+                        <attribute name="Implementation-Vendor" value="${Manifest.vendor}" />
+                        <attribute name="Sealed" value="false" />
+                    </section>
+             </manifest>
+        </jar>
+
+    </target>
+
+
+    <target name="java-doc" depends="clean" description="Composes the JavaDoc to be generated for consumers">
+        <javadoc sourcepath="${basedir}"
+    	         destdir="${builddir}/doc"
+                 version="true"
+                 author="true"
+                 use="true"
+                 charset="utf-8"
+                 docencoding="utf-8"
+                 overview="${basedir}/overview.html"
+        	     useexternalfile="true"
+                 windowtitle="SBLIM CIM Client - ${Manifest.version} - Public API Specification">
+            <group
+                 title="Packages containing the public API of the CIM&amp;SLP Client"
+                 packages="org.sblim.wbem.client*:org.sblim.wbem.cim:org.sblim.wbem.util:org.sblim.slp"/>
+            <group
+                 title="Packages containing the internal implementation"
+                 packages="org.sblim.wbem.cimxml*:org.sblim.wbem.http*:org.sblim.wbem.xml*:org.sblim.slp.internal"/>
+            <doctitle><![CDATA[<h1>SBLIM CIM Client - ${Manifest.version} - Public API Specification</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169; 2005, 2011 IBM Corporation. All Rights Reserved.</i>]]></bottom>
+            <fileset
+                dir="${basedir}"
+                includes="**/*.java"
+            	excludes="org/sblim/wbem/cimclient/sample/**/*.java, org/sblim/slp/example/*.java"/>
+        </javadoc>
+    </target>
+
+
+	<target name="build-release" depends="package, java-doc" description="Builds all targets that are needed for a release">
+    </target>
+
+	
+    <target name="release" depends="build-release" description="Packages the SBLIM CIM Client into zip archives and tar balls">
+    	<fixcrlf srcDir="${basedir}" includes="*.spec"
+    	         eol="lf" eof="remove" />
+        <tar destfile="${builddir}/sblim-cim-client-${Manifest.version}-bin.tar.bz2" 
+             compression="bzip2">
+            <tarfileset
+                dir="${basedir}" 
+                includes="ChangeLog, 
+                          COPYING, 
+                          NEWS, 
+                          README, 
+                          cim.defaults,
+                          slp.conf"
+                prefix="${packagedir}"/>
+            <tarfileset
+                dir="${packagedir}" 
+                includes="${jarfilename},
+            	          ${slpjarfilename},
+                          version.txt"
+            	prefix="${packagedir}"/>
+        </tar>
+
+        <tar destfile="${builddir}/sblim-cim-client-${Manifest.version}-src.tar.bz2" 
+             compression="bzip2">
+            <tarfileset
+                dir="${basedir}" 
+                includes="**/*.java,
+                          **/*.html,
+                          ChangeLog, 
+                          COPYING, 
+                          NEWS, 
+                          README, 
+                          cim.defaults,
+                          slp.conf,
+            	          build.xml,
+            	          overview.html,
+                          sblim-cim-client.spec"
+                    prefix="${packagedir}"
+                    excludes="${packagedir}/**, **/cimclient/sample/**, **/slp/example/**"/>
+            <tarfileset
+                dir="${packagedir}" 
+                includes="version.txt"
+            	prefix="${packagedir}"/>
+        </tar>
+
+        <tar destfile="${builddir}/sblim-cim-client-samples-${Manifest.version}-src.tar.bz2" 
+             compression="bzip2">
+            <tarfileset 
+                 dir="${basedir}" 
+                 includes="**/cimclient/sample/**/*.java,
+                           **/slp/example/**/*.java,
+                           COPYING, 
+                           README.samples"
+                 prefix="${packagedir}/samples"/>
+            <tarfileset
+                dir="${packagedir}" 
+                includes="version.txt"
+            	prefix="${packagedir}"/>
+        </tar>
+
+        <tar destfile="${builddir}/sblim-cim-client-${Manifest.version}-doc.tar.bz2" 
+            compression="bzip2">
+           <tarfileset
+               dir="${basedir}" 
+               includes="ChangeLog, 
+                         COPYING, 
+                         NEWS, 
+                         README"
+               prefix="${packagedir}"/>
+           <tarfileset
+               dir="${packagedir}" 
+               includes="doc/**,
+           	          version.txt"
+           	prefix="${packagedir}"/>        	
+		</tar>
+
+        <zip destfile="${builddir}/sblim-cim-client-${Manifest.version}-bin.zip">
+            <zipfileset
+                dir="${basedir}" 
+                includes="ChangeLog,
+                          COPYING, 
+                          NEWS, 
+                          README, 
+                          cim.defaults,
+                          slp.conf"
+                prefix="${packagedir}"/>
+            <zipfileset
+                dir="${packagedir}" 
+                includes="${jarfilename},
+            	          ${slpjarfilename},
+                          version.txt"
+            	prefix="${packagedir}"/>
+        </zip>
+
+        <zip zipfile="${builddir}/sblim-cim-client-${Manifest.version}-src.zip">
+            <zipfileset
+                dir="${basedir}" 
+                includes="**/*.java,
+                          **/*.html,
+                          ChangeLog, 
+                          COPYING, 
+                          NEWS, 
+                          README, 
+                          cim.defaults,
+                          slp.conf,
+            	          build.xml,
+            	          overview.html,
+                          sblim-cim-client.spec"
+                    prefix="${packagedir}"
+                    excludes="${packagedir}/**, **/cimclient/sample/**, **/slp/example/**"/>
+            <zipfileset
+                dir="${packagedir}" 
+                includes="version.txt"
+            	prefix="${packagedir}"/>
+        </zip>
+
+        <zip zipfile="${builddir}/sblim-cim-client-samples-${Manifest.version}-src.zip">
+            <zipfileset 
+                 dir="${basedir}" 
+                 includes="**/cimclient/sample/**/*.java,
+                           **/slp/example/**/*.java,
+                           COPYING, 
+                           README.samples"
+                 prefix="${packagedir}/samples"/>
+            <zipfileset
+                dir="${packagedir}" 
+                includes="version.txt"
+            	prefix="${packagedir}"/>
+        </zip>
+
+        <zip zipfile="${builddir}/sblim-cim-client-${Manifest.version}-doc.zip">
+            <zipfileset
+                dir="${basedir}" 
+                includes="ChangeLog, 
+                          COPYING, 
+                          NEWS, 
+                          README"
+                prefix="${packagedir}"/>
+            <zipfileset
+                dir="${packagedir}" 
+                includes="doc/**,
+                          version.txt"
+            	prefix="${packagedir}"/>
+        </zip>   
+    </target>
+
+	
+    <target name="cvs-update" description="Updates the SBLIM CIM Client sources from the CVS system">
+        <cvs command="update -AdP"/>
+    </target>
+
+
+</project>
+
